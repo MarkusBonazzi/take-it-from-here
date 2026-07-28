@@ -9,9 +9,9 @@
 ![Multilingual](https://img.shields.io/badge/language-multilingual-f59e0b.svg)
 ![Agent adaptive](https://img.shields.io/badge/agents-adaptive-0ea5e9.svg)
 
-**A clean exit ramp for long AI sessions.**
+**A clean continuation path for long AI sessions.**
 
-Preserve what matters. Drop the transcript. Continue on your terms.
+Preserve what matters. Drop the transcript. Let the agent keep going.
 
 </div>
 
@@ -19,7 +19,7 @@ Preserve what matters. Drop the transcript. Continue on your terms.
 
 ## What it does
 
-`take-it-from-here` compresses the execution-critical state of a long AI session into a continuation note of at most 800 tokens.
+`take-it-from-here` lets the user hand the remaining work to the agent. It compresses the execution-critical state of a long session into a continuation note of at most 800 tokens, opens a fresh session when possible, and continues working there.
 
 It keeps:
 
@@ -44,15 +44,16 @@ flowchart LR
     B --> C{"Can the host create a new session?"}
     C -->|Yes| D["Open a fresh session"]
     C -->|No| E["Return a copy-ready prompt"]
-    D --> F["Stop and wait for the user"]
-    E --> F
+    D --> F["Continue from the next action"]
+    E --> G["User pastes prompt into a fresh session"]
+    G --> F
 ```
 
 The core workflow is stored in `SKILL.md` and is not tied to a specific model.
 
 | Host capability | Result |
 |---|---|
-| Can create tasks or sessions | Opens a fresh session in the same project |
+| Can create tasks or sessions | Opens a fresh session and continues the work |
 | Cannot create sessions | Returns one copy-ready continuation block |
 | Supports title tools | Gives the new session a short useful title |
 | Uses another invocation syntax | Natural-language triggering still works |
@@ -90,14 +91,17 @@ Invoke it directly:
 $take-it-from-here
 ```
 
-Or say the same thing naturally:
+Or delegate naturally:
 
 ```text
-I'll take it from here.
-Move the context to a fresh session and step aside.
-Дальше я сам.
-Убери руки, я всё сделаю.
-Перенеси контекст в новую задачу и остановись.
+Take it from here.
+Handle the rest.
+Move this to a fresh session and keep going.
+Continue this in a new task.
+Возьми дальше на себя.
+Продолжи в новой задаче.
+Перенеси работу в свежую сессию и продолжай.
+Доделай сам.
 ```
 
 The continuation note follows the user's current language. Commands, code, paths, filenames, identifiers, and error messages stay unchanged.
@@ -111,7 +115,7 @@ The skill explicitly forbids including:
 - full file contents;
 - unsupported guesses about earlier work.
 
-The original session is left unchanged and unarchived. After the handoff, the agent does not continue autonomous work.
+The original session is left unchanged and unarchived. Work continues only in the fresh session, avoiding duplicate execution in both places.
 
 ## Repository layout
 
