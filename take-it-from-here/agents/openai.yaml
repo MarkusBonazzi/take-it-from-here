@@ -1,6 +1,6 @@
 interface:
   display_name: "Take It From Here"
-  short_description: "Move context to a fresh session, then stop"
-  default_prompt: "Use $take-it-from-here to move only the essential continuation context into a fresh session, then step aside."
+  short_description: "Move to a fresh session and keep working"
+  default_prompt: "Use $take-it-from-here to move the essential context into a fresh session and continue from the next action."
 policy:
   allow_implicit_invocation: false
