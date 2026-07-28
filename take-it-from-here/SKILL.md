@@ -1,19 +1,19 @@
 ---
 name: take-it-from-here
-description: Take over the user's remaining work, create a compact continuation context, transfer it to a fresh task or session when the host supports that, and continue from the next action. Use when the user invokes $take-it-from-here or /take-it-from-here, says "take it from here" or "handle the rest," asks to move the work to a fresh session and keep going, or expresses equivalent intent in any language, including "возьми дальше на себя," "продолжи в новой задаче," or "доделай сам."
+description: Prepare the user's remaining work for a fresh task or session, transfer a compact continuation context when the host supports that, and offer to continue without starting work until the user explicitly confirms. Use when the user invokes $take-it-from-here or /take-it-from-here, asks to prepare a fresh session, move context to a new task and wait, or expresses equivalent intent in any language, including "подготовь продолжение в новой задаче," "перенеси контекст и жди моей команды," or "предложи продолжить со следующего шага."
 ---
 
 # Take It From Here
 
-Take responsibility for the remaining work. Transfer the minimum execution-critical state into a fresh task without copying the conversation, then continue from the next action.
+Transfer the minimum execution-critical state into a fresh task without copying the conversation. Offer one concrete next action, then wait for explicit user confirmation before doing it.
 
 ## Host adaptation
 
 1. Inspect the tools and capabilities already available in the current AI host. Do not assume product-specific task or session tools exist.
-2. If the host can create a new task, chat, or session, create one in the same saved project or workspace, use the continuation note as its initial prompt, and tell the receiving agent to continue immediately.
-3. If the host cannot create a new session, return the complete continuation note in one copy-ready fenced block and tell the user to paste it into a fresh session so the agent can continue there.
+2. If the host can create a new task, chat, or session, create one in the same saved project or workspace, use the continuation note as its initial prompt, and tell the receiving agent to offer the next action and wait.
+3. If the host cannot create a new session, return the complete continuation note in one copy-ready fenced block and tell the user to paste it into a fresh session. The prompt must still require confirmation before work begins.
 4. If project identity cannot be preserved automatically, include the exact working directory or workspace identity in the continuation note.
-5. Use title-setting tools only when available. Never fail the continuation merely because title-setting is unavailable.
+5. Use title-setting tools only when available. Never fail the prepared continuation merely because title-setting is unavailable.
 
 ## Language
 
@@ -37,12 +37,12 @@ Take responsibility for the remaining work. Transfer the minimum execution-criti
    - one concrete next action.
 4. Never include the full conversation, large logs, full file contents, secrets, credentials, or speculative history.
 5. Follow the host-adaptation path above: create a new task or session when supported; otherwise return a copy-ready continuation note.
-6. Tell the receiving session to verify the listed working files briefly, avoid repeating completed discovery, and continue immediately from the listed next action. Ask the user only when genuinely blocked, when required information is missing, or when approval is required.
+6. Tell the receiving session to verify the listed working files briefly, avoid repeating completed discovery, state the proposed next action, and ask whether to continue. Do not execute the next action until the user explicitly confirms.
 7. Give the new task or session a short title based on the objective when title-setting is supported.
-8. Return the created-session link or directive when available, otherwise return the copy-ready block, plus a one-sentence summary. Leave the old session unchanged, do not archive it, and continue the transferred work only in the fresh session.
+8. Return the created-session link or directive when available, otherwise return the copy-ready block, plus a one-sentence summary. Leave the old session unchanged, do not archive it, and do not resume work in either session without explicit user confirmation.
 
 ## Initial prompt format
 
 Start the receiving prompt with `TAKE IT FROM HERE - CONTEXT FROM PREVIOUS SESSION`, followed by the compact sections above and this final instruction:
 
-`Continue from the listed next action immediately. Do not redo completed investigation. Ask the user only if blocked or if approval is required.`
+`Context only. Briefly verify the listed working state, offer to continue from the listed next action, and wait. Do not start work until the user explicitly confirms.`
