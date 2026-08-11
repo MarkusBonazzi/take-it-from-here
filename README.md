@@ -19,7 +19,7 @@ Preserve what matters. Drop the transcript. Continue only when you say go.
 
 ## What it does
 
-`take-it-from-here` prepares the remaining work for a fresh AI session. It compresses the execution-critical state into a continuation note of at most 800 tokens, opens a fresh session when possible, and offers one concrete next action without starting it.
+`take-it-from-here` prepares the remaining work for a fresh AI session. It compresses the execution-critical state into a continuation note of at most 800 tokens, opens a fresh local session when that can be done without creating a Git branch or worktree, and offers one concrete next action without starting it.
 
 It keeps:
 
@@ -41,8 +41,8 @@ It leaves behind:
 ```mermaid
 flowchart LR
     A["Current AI session"] --> B["Distill essential context"]
-    B --> C{"Can the host create a new session?"}
-    C -->|Yes| D["Open a fresh session"]
+    B --> C{"Can the host create a local session without Git side effects?"}
+    C -->|Yes| D["Open a fresh local session"]
     C -->|No| E["Return a copy-ready prompt"]
     D --> F["Offer the next action and wait"]
     E --> G["User pastes prompt into a fresh session"]
@@ -53,7 +53,8 @@ The core workflow is stored in `SKILL.md` and is not tied to a specific model.
 
 | Host capability | Result |
 |---|---|
-| Can create tasks or sessions | Opens a fresh session, offers to continue, and waits |
+| Can create a local task without a branch, worktree, or history fork | Opens a fresh local session, offers to continue, and waits |
+| Only branch/worktree creation is available | Returns one copy-ready continuation block |
 | Cannot create sessions | Returns one copy-ready continuation block |
 | Supports title tools | Gives the new session a short useful title |
 | Uses another invocation syntax | Natural-language triggering still works |
@@ -115,7 +116,7 @@ The skill explicitly forbids including:
 - full file contents;
 - unsupported guesses about earlier work.
 
-The original session is left unchanged and unarchived. No work resumes until the user explicitly confirms it in the fresh session.
+The original session is left unchanged and unarchived. The skill does not create or switch Git branches, create worktrees, or fork conversation history. No work resumes until the user explicitly confirms it in the fresh session.
 
 ## Repository layout
 
