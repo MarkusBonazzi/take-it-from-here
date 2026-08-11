@@ -1,6 +1,6 @@
 interface:
   display_name: "Take It From Here"
-  short_description: "Prepare a fresh session and wait to continue"
-  default_prompt: "Use $take-it-from-here to prepare a fresh session, offer the next action, and wait for my confirmation."
+  short_description: "Prepare a fresh local session and wait"
+  default_prompt: "Use $take-it-from-here to prepare a fresh local session without creating Git branches or worktrees, offer the next action, and wait for my confirmation."
 policy:
   allow_implicit_invocation: false
